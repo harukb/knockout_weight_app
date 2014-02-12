@@ -1,0 +1,268 @@
+<!-- CSS対応Ver -->
+<!DOCTYPE html>
+<!--[if lt IE 7 ]> <html lang="ja" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="ja" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="ja" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="ja" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="ja" class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>赤ちゃんの.体重増加平均の計算</title>
+    <link type="text/css" href="css/ui-lightness/jquery-ui-1.10.4.custom.css" rel="stylesheet" />
+<!--     <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css" media="screen, projection" /> -->
+    <style type="text/css">
+        #container  {
+            width: 100%;
+            display: -webkit-box;
+            display: -moz-box;
+        }
+        #leftBox    {
+            width: 100%;
+        }
+        #rightBox   {
+            width: 250px;
+            background: #666;
+            min-height: 100px;
+        }
+        label.error {
+            color: #db1818;
+            font-size:12px;
+        },
+        .form-container {
+           border: 1px solid #f2e3d2;
+           background: #c9b7a2;
+           background: -webkit-gradient(linear, left top, left bottom, from(#f2e3d2), to(#c9b7a2));
+           background: -webkit-linear-gradient(top, #f2e3d2, #c9b7a2);
+           background: -moz-linear-gradient(top, #f2e3d2, #c9b7a2);
+           background: -ms-linear-gradient(top, #f2e3d2, #c9b7a2);
+           background: -o-linear-gradient(top, #f2e3d2, #c9b7a2);
+           background-image: -ms-linear-gradient(top, #f2e3d2 0%, #c9b7a2 100%);
+           -webkit-border-radius: 5px;
+           -moz-border-radius: 5px;
+           border-radius: 5px;
+           -webkit-box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
+           -moz-box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
+           box-shadow: rgba(000,000,000,0.9) 0 1px 2px, inset rgba(255,255,255,0.4) 0 0px 0;
+           font-family: 'Helvetica Neue',Helvetica,sans-serif;
+           text-decoration: none;
+           vertical-align: middle;
+           min-width:300px;
+           padding:20px;
+           width:300px;
+           }
+        .form-field {
+           border: 1px solid #c9b7a2;
+           background: #e4d5c3;
+           -webkit-border-radius: 4px;
+           -moz-border-radius: 4px;
+           border-radius: 4px;
+           color: #291805;
+           -webkit-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(000,000,000,0.7) 0 0px 0px;
+           -moz-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(000,000,000,0.7) 0 0px 0px;
+           box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(000,000,000,0.7) 0 0px 0px;
+           padding:8px;
+           margin-bottom:20px;
+           width:280px;
+           }
+        .form-field:focus {
+           background: #fff;
+           color: #703128;
+           }
+        .form-container h2 {
+           text-shadow: #fdf2e4 0 1px 0;
+           font-size:18px;
+           margin: 0 0 10px 0;
+           font-weight:bold;
+           text-align:center;
+            }
+        .form-title {
+           margin-bottom:10px;
+           color: #725129;
+           text-shadow: #fdf2e4 0 1px 0;
+           }
+        .title-main {
+           margin-bottom:10px;
+           color: #725129;
+           text-shadow: #fdf2e4 0 2px 0;
+           font-size:36px;
+           }
+         .title-message {
+           margin-bottom:10px;
+           color: #155154;
+           text-shadow: #fdf2e4 0 1px 0;
+           font-size:16px;
+           }
+         .title-result {
+           margin-bottom:10px;
+           color: #155154;
+           text-shadow: #fdf2e4 0 1px 0;
+           font-size:32px;
+           font-weight:bold;
+           }
+          .title-contact {
+           margin-top:30px;
+           text-align: right;
+           color: #155154;
+           text-shadow: #fdf2e4 0 1px 0;
+           font-size:12px;
+           }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="title-main">赤ちゃんの体重増加率を調べます</div>
+        <div class="title-message"><h4>前回と現在（または比較したい時点）の情報を入力してください。</h4></div>
+    </header>
+    <div id="container" class="container">
+        <div id="leftBox">
+            <form id="appForm" class="form-container">
+                
+                <div class="form-title">前回の体重(g): 
+                    <label id="bweight_err"></label>
+                    <input type = "hidden" id="bweight_hd" />
+                </div>
+                <input type="text" class="form-field" data-bind="value: birthWeight,valueUpdate:'afterkeydown'" name="bweight" />
+                
+                <div class="form-title">前回の日付(yyyy/mm/dd): 
+                    <label id="bday_err"></label>
+                </div>
+                <input type="text" class="form-field" id="birthday" data-bind="value: birthDay,valueUpdate:'afterkeydown'" name="bday" />
+
+                <div class="form-title">現在の体重(g): 
+                    <label id="nweight_err"></label>
+                    <input type = "hidden" id="nweight_hd" />
+                </div>
+                <input type="text" class="form-field" data-bind="value: nowWeight,valueUpdate:'afterkeydown'" name="nweight" />
+                
+                <div class="form-title">現在の日付(yyyy/mm/dd): 
+                    <label id="nday_err"></label>
+                    <input type = "hidden" id="nday_hd" />
+                </div>
+                <input type="text" class="form-field" id="nowday" data-bind="value: nowDay,valueUpdate:'afterkeydown'" name="nday" />
+            </form>
+            <div class="title-message">
+                <h4>経過日数: 
+                    <span data-bind="text: dayCnt" /></span>
+                </h4>
+            </div>
+            <div class="title-result">
+                体重増加は<span data-bind="text: avarage" /></span>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="title-contact">>>>Created by <a href="https://twitter.com/harukb">@harukb</a></div>
+    </footer>
+    <script src="js/jquery-1.10.2.js"></script>
+    <script src="js/jquery-ui-1.10.4.custom.js"></script>
+    <script src="js/jquery.validate.js"></script>
+    <script type="text/javascript" src="js/knockout-3.0.0.js"></script>
+    <!-- // <script type="text/javascript" src="/js/bootstrap.min.js"></script> -->
+    <script type="text/javascript" >
+        $().ready(function() {
+            jQuery.validator.addMethod(
+                "DateValidation",
+                function(value) {
+                    var dateelem = value.split("/");
+                    if (12<dateelem[1] || dateelem[1].length != 2||31<dateelem[2] || dateelem[2].length != 2 ) {
+                        return false;
+                    } 
+                    else 
+                        return true;
+                },
+                "日付はyyyy/mm/dd形式で入力してください。（一桁の場合は0埋めしてね。）"
+            );
+            $("#appForm").validate({
+                    onfocusout: function (element, event) {
+                        if (element.name === "bweight" || element.name === "bday" || element.name === "nweight" || element.name === "nday") {
+                            this.element(element);
+                        };
+                    },
+                    //_errのLabelにメッセージ出力
+                    errorPlacement: function (error,element) {
+                        error.appendTo($("#"+element.attr('name')+"_err"));
+                   },
+                    rules : {
+                        bweight: {
+                            required: true,
+                            digits: true,
+                            min:1
+                        },
+                        bday: {
+                            required: true,
+                            dateISO: true,
+                            DateValidation:true
+                        },
+                        nweight: {
+                            required: true,
+                            digits: true,
+                            min:1
+                        },
+                        nday: {
+                            required: true,
+                            dateISO: true,
+                            DateValidation:true
+                        }
+                    },
+                    messages: {
+                        bweight: {
+                            required: "数値を入力してください（未入力）",
+                            minlength: "数値を入力してください（4桁未満）",
+                            digits: "整数を半角入力してください",
+                            min:"数値が不正です。",
+                        },
+                        bday: {
+                            required: "日付をyyyy/mm/dd形式で入力してください（未入力）",
+                            dateISO: "日付をyyyy/mm/dd形式で入力してください（形式エラー）"
+                        },
+                        nweight: {
+                            required: "数値を入力してください（未入力）",
+                            minlength: "数値を入力してください（4桁未満）",
+                            digits: "整数を半角入力してください",
+                            min:"数値が不正です。"
+                        },
+                        nday: {
+                            required: "日付をyyyy/mm/dd形式で入力してください（未入力）",
+                            dateISO: "日付をyyyy/mm/dd形式で入力してください（形式エラー）"
+                        },
+                    }
+            });
+
+            // ViewModel の定義
+            var ViewModel = function(birthw, noww,birthd,nowd) {
+                this.birthWeight = ko.observable(birthw);
+                this.nowWeight = ko.observable(noww);
+                this.birthDay = ko.observable(birthd);
+                this.nowDay = ko.observable(nowd);
+                this.dayCnt =  ko.computed(function(){
+                    //前回日付
+                    var dt1 = new Date(this.birthDay().substr(0,4),Number(this.birthDay().substr(5,2))-1,Number(this.birthDay().substr(8,2)));
+                    //現在日付
+                    var dt2 = new Date(this.nowDay().substr(0,4),Number(this.nowDay().substr(5,2))-1,Number(this.nowDay().substr(8,2)));
+                    //経過日数（単位は日）
+                    var d =  ((dt2-dt1)/1000/60/60/24);
+                    // すべての入力項目が埋められており、エラーが無い場合のみ日数を表示する。
+                    if ((this.birthWeight().length < 1 || this.nowWeight().length < 1  || this.birthDay().length < 1 || this.nowDay().length < 1)  
+                        || (($("#bweight_err").text().length + $("#nweight_err").text().length + $("#bday_err").text().length + $("#nday_err").text().length ) > 0 ))
+                    {
+                        return "？？？";
+                    } else 
+                        return d;
+                },this);
+                this.avarage = ko.computed(function() {
+                    var a = ((this.nowWeight() -this.birthWeight()) /this.dayCnt()).toFixed(2) ;
+                    if (!isFinite(a) || isNaN(a)){
+                        return "？？？";
+                    } else 
+                        return a+"g/day";
+                }, this);
+            };
+             
+            // ko.applyBindings(new ViewModel("2800", "3800","2013/05/01","2013/05/30"));
+            ko.applyBindings(new ViewModel("","","",""));
+        });
+    </script>
+<body>
+</html>
