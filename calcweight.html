@@ -114,7 +114,6 @@
 
                 <div class="form-title">現在の体重(g): 
                     <label id="nweight_err"></label>
-                    <input type = "hidden" id="nweight_hd" />
                 </div>
                 <input type="text" class="form-field" data-bind="value: nowWeight,valueUpdate:'afterkeydown'" name="nweight" />
                 
@@ -139,7 +138,6 @@
     <script src="js/jquery-ui-1.10.4.custom.js"></script>
     <script src="js/jquery.validate.js"></script>
     <script type="text/javascript" src="js/knockout-3.0.0.js"></script>
-    <!-- // <script type="text/javascript" src="/js/bootstrap.min.js"></script> -->
     <script type="text/javascript" >
         $().ready(function() {
             jQuery.validator.addMethod(
@@ -157,9 +155,6 @@
             $("#appForm").validate({
                     success: function(label){
                       label.html('<span class="valid">OK</span>');
-                    },
-                    submitHandler: function() {
-                      alert("all ok");
                     },
                     onfocusout: function (element, event) {
                         if (element.name === "bweight" || element.name === "bday" || element.name === "nweight" || element.name === "nday") {
